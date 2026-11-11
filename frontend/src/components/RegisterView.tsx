@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { AuthPage, User } from "../types";
-import { authService } from "../services/authService";
 import {
   UserPlus,
   Mail,
@@ -8,11 +7,10 @@ import {
   User as UserIcon,
   Eye,
   EyeOff,
-  CheckCircle2,
   ArrowRight,
-  Sparkles,
 } from "lucide-react";
-import { GoogleLogo, GoogleAccountModal } from "./GoogleAccountModal";
+
+import axios from "axios";
 
 interface RegisterViewProps {
   onNavigate: (page: AuthPage) => void;
@@ -21,9 +19,8 @@ interface RegisterViewProps {
 }
 
 export const RegisterView: React.FC<RegisterViewProps> = ({
-  onNavigate,
-  onRegistered,
-  onGoogleSuccess,
+  onNavigate
+
 }) => {
   const [showPassword, setShowPassword] = useState(false);
   const [formInputs, setformInputs] = useState({
@@ -34,15 +31,27 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
     terms: false,
   });
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
+  const [Success, setSuccess] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    let datapost= await axios.post("http://localhost:5000/ragistration",formInputs)
+    
+    setSuccess(datapost.data.message)
+    setformInputs({
+    fullname: "",
+    email: "",
+    password: "",
+    confirmPassword: "",
+    terms: false,
+  })
+
+
   };
 
 
 function handleChange(e: { target: { name: string; value: any; }; }){
-console.log(formInputs)
+
 setformInputs({
   ...formInputs,[e.target.name]:e.target.name=="terms"? !formInputs.terms:e.target.value
 })
@@ -64,9 +73,9 @@ setformInputs({
           </p>
         </div>
 
-        {error && (
-          <div className="mb-5 p-3 rounded-xl bg-rose-50 border border-rose-200 text-rose-700 text-xs font-medium">
-            {error}
+        {Success && (
+          <div className="mb-5 p-3 rounded-xl bg-green-50 border border-green-200 text-green-700 text-xs font-medium">
+            {Success}
           </div>
         )}
 

@@ -1,8 +1,9 @@
 const User=require("../models/usersModels")
 const emailRegex = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
-const registrationController=(req,res)=>{
+const registrationController=async (req,res)=>{
     const {fullname,email,password,confirmPassword,terms}=req.body
     let emailTest=emailRegex.test(email)
+    let existing_email= await User.findOne({email:email})
     const errors={}
     if(!fullname || !email || !password || !confirmPassword || !terms){
         if(!fullname)errors.fullname="name is required"
@@ -27,6 +28,12 @@ const registrationController=(req,res)=>{
             message:"confirmpassword should be match with password"
         })
     }
+    if(existing_email){
+          return res.status(400).json({
+            success:false,
+            message:"This email is exist"
+        })
+    }
 
     res.status(200).json({
         success:true,
@@ -38,7 +45,7 @@ const registrationController=(req,res)=>{
         email:email,
         password:password,
         terms:terms
-    })
+    }).save()
     
 
 }
