@@ -23,7 +23,7 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
 
 }) => {
   const [showPassword, setShowPassword] = useState(false);
-  const [Error, setError] = useState(null)
+  const [Error, setError] = useState("")
   const [formInputs, setformInputs] = useState({
     fullname: "",
     email: "",
@@ -32,10 +32,12 @@ export const RegisterView: React.FC<RegisterViewProps> = ({
     terms: false,
   });
   const [loading, setLoading] = useState(false);
-  const [Success, setSuccess] = useState(null);
+  const [Success, setSuccess] = useState("");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+setSuccess("");
     try{
       let datapost= await axios.post("http://localhost:5000/ragistration",formInputs)
       setSuccess(datapost.data.message)
@@ -79,11 +81,14 @@ setformInputs({
           </p>
         </div>
 <div>
-        {Success ? (
+        {Success && (
           <div className="mb-5 p-3 rounded-xl bg-green-50 border border-green-200 text-green-700 text-xs font-medium">
             {Success}
           </div>
-        ): Error&&
+        )}
+        {
+          
+        Error&&
         
           <div className="mb-5 p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs font-medium">
             {Error}
