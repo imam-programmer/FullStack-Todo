@@ -1,63 +1,113 @@
-import React, { useState, useEffect, useMemo } from 'react';
-import { User, TodoItem, TodoPriority, TodoCategory, FilterStatus, SortField, SortOrder } from '../types';
-import { todoService } from '../services/todoService';
+import React, { useState, useEffect, useMemo } from "react";
+import {
+  User,
+  TodoItem,
+  TodoPriority,
+  TodoCategory,
+  FilterStatus,
+  SortField,
+  SortOrder,
+} from "../types";
+import { todoService } from "../services/todoService";
 import {
   Plus,
   Search,
-  Filter,
   CheckCircle2,
   Circle,
   Clock,
   Calendar,
-  AlertTriangle,
   Trash2,
   Edit3,
   X,
   RotateCcw,
-  SlidersHorizontal,
-  ChevronDown,
-  Layers,
   Code,
-  Tag,
   ArrowUpDown,
   ListTodo,
-  CheckCheck,
   Check,
-  FileText
-} from 'lucide-react';
+  FileText,
+} from "lucide-react";
 
 interface TodoViewProps {
   currentUser: User | null;
   onLogout: () => void;
 }
 
-const CATEGORIES: TodoCategory[] = ['Work', 'Personal', 'Study', 'Finance', 'Health', 'Other'];
-const PRIORITIES: { value: TodoPriority; label: string; color: string; border: string; bg: string }[] = [
-  { value: 'urgent', label: 'Urgent', color: 'text-rose-700', border: 'border-rose-200', bg: 'bg-rose-50' },
-  { value: 'high', label: 'High', color: 'text-amber-700', border: 'border-amber-200', bg: 'bg-amber-50' },
-  { value: 'medium', label: 'Medium', color: 'text-indigo-700', border: 'border-indigo-200', bg: 'bg-indigo-50' },
-  { value: 'low', label: 'Low', color: 'text-slate-700', border: 'border-slate-200', bg: 'bg-slate-100' },
+// const CATEGORIES: TodoCategory[] = [
+//   "Work",
+//   "Personal",
+//   "Study",
+//   "Finance",
+//   "Health",
+//   "Other",
+// ];
+const PRIORITIES: {
+  value: TodoPriority;
+  label: string;
+  color: string;
+  border: string;
+  bg: string;
+}[] = [
+  {
+    value: "urgent",
+    label: "Urgent",
+    color: "text-rose-700",
+    border: "border-rose-200",
+    bg: "bg-rose-50",
+  },
+  {
+    value: "high",
+    label: "High",
+    color: "text-amber-700",
+    border: "border-amber-200",
+    bg: "bg-amber-50",
+  },
+  {
+    value: "medium",
+    label: "Medium",
+    color: "text-indigo-700",
+    border: "border-indigo-200",
+    bg: "bg-indigo-50",
+  },
+  {
+    value: "low",
+    label: "Low",
+    color: "text-slate-700",
+    border: "border-slate-200",
+    bg: "bg-slate-100",
+  },
 ];
 
-export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => {
+export const TodoView: React.FC<TodoViewProps> = ({
+  currentUser,
+  onLogout,
+}) => {
+  const [CATEGORIES, setCATEGORIES] = useState<TodoCategory[]>([
+    "Work",
+    "Personal",
+    "Study",
+    "Finance",
+    "Health",
+    "Other",
+  ]);
   const [todos, setTodos] = useState<TodoItem[]>([]);
   const [loading, setLoading] = useState(true);
 
   // Quick Add state
-  const [quickTitle, setQuickTitle] = useState('');
-  const [quickPriority, setQuickPriority] = useState<TodoPriority>('medium');
-  const [quickCategory, setQuickCategory] = useState<TodoCategory>('Work');
-  const [quickDueDate, setQuickDueDate] = useState<string>('');
+  const [quickTitle, setQuickTitle] = useState("");
+  const [Category, setCategory] = useState("");
+  const [quickPriority, setQuickPriority] = useState<TodoPriority>("medium");
+  const [quickCategory, setQuickCategory] = useState<TodoCategory>("Work");
+  const [quickDueDate, setQuickDueDate] = useState<string>("");
   const [isAddingDetails, setIsAddingDetails] = useState(false);
-  const [quickDescription, setQuickDescription] = useState('');
+  const [quickDescription, setQuickDescription] = useState("");
 
   // Search & Filter state
-  const [searchQuery, setSearchQuery] = useState('');
-  const [statusFilter, setStatusFilter] = useState<FilterStatus>('all');
-  const [priorityFilter, setPriorityFilter] = useState<string>('all');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  const [sortField, setSortField] = useState<SortField>('createdAt');
-  const [sortOrder, setSortOrder] = useState<SortOrder>('desc');
+  const [searchQuery, setSearchQuery] = useState("");
+  const [statusFilter, setStatusFilter] = useState<FilterStatus>("all");
+  const [priorityFilter, setPriorityFilter] = useState<string>("all");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [sortField, setSortField] = useState<SortField>("createdAt");
+  const [sortOrder, setSortOrder] = useState<SortOrder>("desc");
 
   // Edit Modal state
   const [editingTodo, setEditingTodo] = useState<TodoItem | null>(null);
@@ -106,12 +156,12 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
       });
 
       setTodos((prev) => [newTodo, ...prev]);
-      setQuickTitle('');
-      setQuickDescription('');
+      setQuickTitle("");
+      setQuickDescription("");
       setIsAddingDetails(false);
-      showToast('Task added successfully!');
+      showToast("Task added successfully!");
     } catch (err: unknown) {
-      showToast('Failed to add task.');
+      showToast("Failed to add task.");
     }
   };
 
@@ -121,7 +171,7 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
       const updated = await todoService.toggleComplete(id);
       setTodos((prev) => prev.map((t) => (t.id === id ? updated : t)));
     } catch {
-      showToast('Failed to toggle status.');
+      showToast("Failed to toggle status.");
     }
   };
 
@@ -130,9 +180,9 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
     try {
       await todoService.deleteTodo(id);
       setTodos((prev) => prev.filter((t) => t.id !== id));
-      showToast('Task deleted.');
+      showToast("Task deleted.");
     } catch {
-      showToast('Failed to delete task.');
+      showToast("Failed to delete task.");
     }
   };
 
@@ -151,11 +201,13 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
         completed: editingTodo.completed,
       });
 
-      setTodos((prev) => prev.map((t) => (t.id === editingTodo.id ? updated : t)));
+      setTodos((prev) =>
+        prev.map((t) => (t.id === editingTodo.id ? updated : t)),
+      );
       setEditingTodo(null);
-      showToast('Task updated successfully!');
+      showToast("Task updated successfully!");
     } catch {
-      showToast('Failed to update task.');
+      showToast("Failed to update task.");
     }
   };
 
@@ -163,20 +215,20 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
   const handleClearCompleted = async () => {
     await todoService.clearCompleted();
     setTodos((prev) => prev.filter((t) => !t.completed));
-    showToast('Completed tasks cleared.');
+    showToast("Completed tasks cleared.");
   };
 
   const handleMarkAllComplete = async () => {
     const allDone = todos.every((t) => t.completed);
     await todoService.setAllCompleted(!allDone);
     setTodos((prev) => prev.map((t) => ({ ...t, completed: !allDone })));
-    showToast(!allDone ? 'All marked as completed!' : 'All unmarked.');
+    showToast(!allDone ? "All marked as completed!" : "All unmarked.");
   };
 
   const handleResetSampleData = async () => {
     const samples = await todoService.resetSampleData();
     setTodos(samples);
-    showToast('Reset to default sample tasks.');
+    showToast("Reset to default sample tasks.");
   };
 
   // Computed statistics
@@ -185,7 +237,9 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
     const completed = todos.filter((t) => t.completed).length;
     const pending = total - completed;
     const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
-    const urgentCount = todos.filter((t) => !t.completed && (t.priority === 'urgent' || t.priority === 'high')).length;
+    const urgentCount = todos.filter(
+      (t) => !t.completed && (t.priority === "urgent" || t.priority === "high"),
+    ).length;
     return { total, completed, pending, percent, urgentCount };
   }, [todos]);
 
@@ -194,14 +248,16 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
     return todos
       .filter((item) => {
         // Status filter
-        if (statusFilter === 'active' && item.completed) return false;
-        if (statusFilter === 'completed' && !item.completed) return false;
+        if (statusFilter === "active" && item.completed) return false;
+        if (statusFilter === "completed" && !item.completed) return false;
 
         // Priority filter
-        if (priorityFilter !== 'all' && item.priority !== priorityFilter) return false;
+        if (priorityFilter !== "all" && item.priority !== priorityFilter)
+          return false;
 
         // Category filter
-        if (categoryFilter !== 'all' && item.category !== categoryFilter) return false;
+        if (categoryFilter !== "all" && item.category !== categoryFilter)
+          return false;
 
         // Search keyword
         if (searchQuery.trim()) {
@@ -215,26 +271,44 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
       })
       .sort((a, b) => {
         let comp = 0;
-        if (sortField === 'title') {
+        if (sortField === "title") {
           comp = a.title.localeCompare(b.title);
-        } else if (sortField === 'dueDate') {
-          const dateA = a.dueDate ? new Date(a.dueDate).getTime() : 9999999999999;
-          const dateB = b.dueDate ? new Date(b.dueDate).getTime() : 9999999999999;
+        } else if (sortField === "dueDate") {
+          const dateA = a.dueDate
+            ? new Date(a.dueDate).getTime()
+            : 9999999999999;
+          const dateB = b.dueDate
+            ? new Date(b.dueDate).getTime()
+            : 9999999999999;
           comp = dateA - dateB;
-        } else if (sortField === 'priority') {
-          const weight: Record<TodoPriority, number> = { urgent: 4, high: 3, medium: 2, low: 1 };
+        } else if (sortField === "priority") {
+          const weight: Record<TodoPriority, number> = {
+            urgent: 4,
+            high: 3,
+            medium: 2,
+            low: 1,
+          };
           comp = weight[b.priority] - weight[a.priority];
         } else {
           // createdAt
-          comp = new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+          comp =
+            new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         }
-        return sortOrder === 'asc' ? comp : -comp;
+        return sortOrder === "asc" ? comp : -comp;
       });
-  }, [todos, statusFilter, priorityFilter, categoryFilter, searchQuery, sortField, sortOrder]);
+  }, [
+    todos,
+    statusFilter,
+    priorityFilter,
+    categoryFilter,
+    searchQuery,
+    sortField,
+    sortOrder,
+  ]);
 
   const isOverdue = (dateStr?: string) => {
     if (!dateStr) return false;
-    const today = new Date().toISOString().split('T')[0];
+    const today = new Date().toISOString().split("T")[0];
     return dateStr < today;
   };
 
@@ -262,7 +336,11 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
               </span>
             </div>
             <p className="text-xs text-slate-500 mt-1">
-              Logged in as <span className="font-semibold text-slate-700">{currentUser?.name || 'Mahdi Hasan'}</span> ({currentUser?.email || 'mahdihasansojip@gmail.com'})
+              Logged in as{" "}
+              <span className="font-semibold text-slate-700">
+                {currentUser?.name || "Mahdi Hasan"}
+              </span>{" "}
+              ({currentUser?.email || "mahdihasansojip@gmail.com"})
             </p>
           </div>
 
@@ -272,7 +350,9 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
               className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs font-medium text-slate-700 bg-white hover:bg-slate-50 border border-slate-200 rounded-lg shadow-xs transition-colors"
             >
               <Code className="w-3.5 h-3.5 text-indigo-600" />
-              <span>{showBackendGuide ? 'Hide API Guide' : 'Backend API Guide'}</span>
+              <span>
+                {showBackendGuide ? "Hide API Guide" : "Backend API Guide"}
+              </span>
             </button>
             <button
               onClick={handleResetSampleData}
@@ -295,7 +375,16 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                   REST API Backend Integration Guide (React + Tailwind)
                 </h3>
                 <p className="text-xs text-slate-400 mt-1 max-w-2xl">
-                  This application is built with a separate service layer in <code className="text-indigo-300">src/services/authService.ts</code> and <code className="text-indigo-300">src/services/todoService.ts</code>. Simply replace the mock functions with your Express / Node.js backend routes:
+                  This application is built with a separate service layer in{" "}
+                  <code className="text-indigo-300">
+                    src/services/authService.ts
+                  </code>{" "}
+                  and{" "}
+                  <code className="text-indigo-300">
+                    src/services/todoService.ts
+                  </code>
+                  . Simply replace the mock functions with your Express /
+                  Node.js backend routes:
                 </p>
               </div>
               <button
@@ -308,7 +397,9 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-3 mt-4 text-xs font-mono">
               <div className="p-3 bg-slate-950/70 rounded-xl border border-slate-800">
-                <span className="text-indigo-400 font-bold block mb-1">Auth Endpoints:</span>
+                <span className="text-indigo-400 font-bold block mb-1">
+                  Auth Endpoints:
+                </span>
                 <p className="text-slate-300">POST /api/auth/register</p>
                 <p className="text-slate-300">POST /api/auth/verify-email</p>
                 <p className="text-slate-300">POST /api/auth/login</p>
@@ -316,12 +407,24 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                 <p className="text-slate-300">POST /api/auth/reset-password</p>
               </div>
               <div className="p-3 bg-slate-950/70 rounded-xl border border-slate-800">
-                <span className="text-emerald-400 font-bold block mb-1">Todo REST Endpoints:</span>
-                <p className="text-slate-300">GET /api/todos (Fetch all user todos)</p>
-                <p className="text-slate-300">POST /api/todos (Create new todo)</p>
-                <p className="text-slate-300">PUT /api/todos/:id (Update title/details)</p>
-                <p className="text-slate-300">PATCH /api/todos/:id/toggle (Complete)</p>
-                <p className="text-slate-300">DELETE /api/todos/:id (Delete item)</p>
+                <span className="text-emerald-400 font-bold block mb-1">
+                  Todo REST Endpoints:
+                </span>
+                <p className="text-slate-300">
+                  GET /api/todos (Fetch all user todos)
+                </p>
+                <p className="text-slate-300">
+                  POST /api/todos (Create new todo)
+                </p>
+                <p className="text-slate-300">
+                  PUT /api/todos/:id (Update title/details)
+                </p>
+                <p className="text-slate-300">
+                  PATCH /api/todos/:id/toggle (Complete)
+                </p>
+                <p className="text-slate-300">
+                  DELETE /api/todos/:id (Delete item)
+                </p>
               </div>
             </div>
           </div>
@@ -330,33 +433,49 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
         {/* Stats Overview Strip */}
         <div className="grid grid-cols-2 sm:grid-cols-4 gap-3">
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-            <span className="text-xs font-medium text-slate-500 block">Total Tasks</span>
+            <span className="text-xs font-medium text-slate-500 block">
+              Total Tasks
+            </span>
             <div className="flex items-baseline justify-between mt-1">
-              <span className="text-2xl font-bold font-mono text-slate-900 tabular-nums">{stats.total}</span>
+              <span className="text-2xl font-bold font-mono text-slate-900 tabular-nums">
+                {stats.total}
+              </span>
               <ListTodo className="w-4 h-4 text-slate-400" />
             </div>
           </div>
 
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-            <span className="text-xs font-medium text-slate-500 block">Completed</span>
+            <span className="text-xs font-medium text-slate-500 block">
+              Completed
+            </span>
             <div className="flex items-baseline justify-between mt-1">
-              <span className="text-2xl font-bold font-mono text-emerald-600 tabular-nums">{stats.completed}</span>
+              <span className="text-2xl font-bold font-mono text-emerald-600 tabular-nums">
+                {stats.completed}
+              </span>
               <CheckCircle2 className="w-4 h-4 text-emerald-500" />
             </div>
           </div>
 
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
-            <span className="text-xs font-medium text-slate-500 block">Pending</span>
+            <span className="text-xs font-medium text-slate-500 block">
+              Pending
+            </span>
             <div className="flex items-baseline justify-between mt-1">
-              <span className="text-2xl font-bold font-mono text-amber-600 tabular-nums">{stats.pending}</span>
+              <span className="text-2xl font-bold font-mono text-amber-600 tabular-nums">
+                {stats.pending}
+              </span>
               <Clock className="w-4 h-4 text-amber-500" />
             </div>
           </div>
 
           <div className="bg-white p-4 rounded-xl border border-slate-200 shadow-xs">
             <div className="flex items-center justify-between">
-              <span className="text-xs font-medium text-slate-500">Progress</span>
-              <span className="text-xs font-mono font-bold text-indigo-600 tabular-nums">{stats.percent}%</span>
+              <span className="text-xs font-medium text-slate-500">
+                Progress
+              </span>
+              <span className="text-xs font-mono font-bold text-indigo-600 tabular-nums">
+                {stats.percent}%
+              </span>
             </div>
             <div className="w-full bg-slate-100 rounded-full h-2 mt-3 overflow-hidden">
               <div
@@ -376,18 +495,25 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                 required
                 value={quickTitle}
                 onChange={(e) => setQuickTitle(e.target.value)}
-                placeholder="What needs to be done? e.g. Build backend API endpoints..."
+                placeholder="What needs to be done today?"
                 className="flex-1 px-4 py-2.5 text-sm bg-slate-50 sm:bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition-colors placeholder:text-slate-400"
               />
-
+              <input
+                type="text"
+                required
+                value={quickTitle}
+                onChange={(e) => setQuickTitle(e.target.value)}
+                placeholder="add category"
+                className="flex-1 px-4 py-2.5 text-sm bg-slate-50 sm:bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:ring-2 focus:ring-indigo-500/20 focus:border-indigo-600 transition-colors placeholder:text-slate-400"
+              />
               <div className="flex items-center gap-2">
                 <button
                   type="button"
                   onClick={() => setIsAddingDetails(!isAddingDetails)}
                   className={`px-3 py-2.5 text-xs font-medium rounded-xl border transition-colors flex items-center gap-1.5 whitespace-nowrap ${
                     isAddingDetails
-                      ? 'bg-indigo-50 border-indigo-200 text-indigo-700 font-semibold'
-                      : 'bg-white border-slate-200 text-slate-600 hover:text-slate-900'
+                      ? "bg-indigo-50 border-indigo-200 text-indigo-700 font-semibold"
+                      : "bg-white border-slate-200 text-slate-600 hover:text-slate-900"
                   }`}
                   title="Add description & due date"
                 >
@@ -412,7 +538,9 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                 <span className="text-slate-500 font-medium">Priority:</span>
                 <select
                   value={quickPriority}
-                  onChange={(e) => setQuickPriority(e.target.value as TodoPriority)}
+                  onChange={(e) =>
+                    setQuickPriority(e.target.value as TodoPriority)
+                  }
                   className="px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-slate-700 text-xs font-medium focus:outline-hidden focus:border-indigo-600"
                 >
                   <option value="urgent">🔴 Urgent</option>
@@ -426,7 +554,9 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                 <span className="text-slate-500 font-medium">Category:</span>
                 <select
                   value={quickCategory}
-                  onChange={(e) => setQuickCategory(e.target.value as TodoCategory)}
+                  onChange={(e) =>
+                    setQuickCategory(e.target.value as TodoCategory)
+                  }
                   className="px-2.5 py-1 bg-white border border-slate-200 rounded-lg text-slate-700 text-xs font-medium focus:outline-hidden focus:border-indigo-600"
                 >
                   {CATEGORIES.map((cat) => (
@@ -478,7 +608,7 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
               />
               {searchQuery && (
                 <button
-                  onClick={() => setSearchQuery('')}
+                  onClick={() => setSearchQuery("")}
                   className="absolute right-2.5 top-1/2 -translate-y-1/2 text-slate-400 hover:text-slate-600"
                 >
                   <X className="w-3.5 h-3.5" />
@@ -490,33 +620,33 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
             <div className="flex items-center gap-1 p-1 bg-slate-100 rounded-xl shrink-0">
               <button
                 type="button"
-                onClick={() => setStatusFilter('all')}
+                onClick={() => setStatusFilter("all")}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors whitespace-nowrap ${
-                  statusFilter === 'all'
-                    ? 'bg-white text-slate-900 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                  statusFilter === "all"
+                    ? "bg-white text-slate-900 shadow-xs"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 All ({todos.length})
               </button>
               <button
                 type="button"
-                onClick={() => setStatusFilter('active')}
+                onClick={() => setStatusFilter("active")}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors whitespace-nowrap ${
-                  statusFilter === 'active'
-                    ? 'bg-white text-indigo-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                  statusFilter === "active"
+                    ? "bg-white text-indigo-700 shadow-xs"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Active ({todos.filter((t) => !t.completed).length})
               </button>
               <button
                 type="button"
-                onClick={() => setStatusFilter('completed')}
+                onClick={() => setStatusFilter("completed")}
                 className={`px-3 py-1.5 text-xs font-semibold rounded-lg transition-colors whitespace-nowrap ${
-                  statusFilter === 'completed'
-                    ? 'bg-white text-emerald-700 shadow-xs'
-                    : 'text-slate-600 hover:text-slate-900'
+                  statusFilter === "completed"
+                    ? "bg-white text-emerald-700 shadow-xs"
+                    : "text-slate-600 hover:text-slate-900"
                 }`}
               >
                 Done ({todos.filter((t) => t.completed).length})
@@ -547,11 +677,11 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                 className="px-2.5 py-1.5 bg-slate-50 border border-slate-200 rounded-lg text-slate-700 font-medium focus:outline-hidden"
               >
                 <option value="all">Category: All</option>
-                {CATEGORIES.map((c) => (
+                {/* {CATEGORIES.map((c) => (
                   <option key={c} value={c}>
                     {c}
                   </option>
-                ))}
+                ))} */}
               </select>
 
               {/* Sort field */}
@@ -569,9 +699,11 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
 
                 <button
                   type="button"
-                  onClick={() => setSortOrder(sortOrder === 'asc' ? 'desc' : 'asc')}
+                  onClick={() =>
+                    setSortOrder(sortOrder === "asc" ? "desc" : "asc")
+                  }
                   className="p-1.5 bg-slate-50 hover:bg-slate-100 border border-slate-200 rounded-lg text-slate-700 transition-colors"
-                  title={`Toggle order: ${sortOrder === 'asc' ? 'Ascending' : 'Descending'}`}
+                  title={`Toggle order: ${sortOrder === "asc" ? "Ascending" : "Descending"}`}
                 >
                   <ArrowUpDown className="w-3.5 h-3.5" />
                 </button>
@@ -606,19 +738,27 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
               <div className="w-12 h-12 bg-slate-100 text-slate-400 rounded-2xl flex items-center justify-center mx-auto mb-3">
                 <CheckSquare className="w-6 h-6 text-slate-400" />
               </div>
-              <h3 className="text-sm font-bold text-slate-800">No tasks found</h3>
+              <h3 className="text-sm font-bold text-slate-800">
+                No tasks found
+              </h3>
               <p className="text-xs text-slate-500 mt-1 max-w-sm mx-auto">
-                {searchQuery || priorityFilter !== 'all' || categoryFilter !== 'all' || statusFilter !== 'all'
-                  ? 'No tasks match your current search or filter criteria. Try resetting filters.'
-                  : 'Your task list is empty. Add a task above to get started!'}
+                {searchQuery ||
+                priorityFilter !== "all" ||
+                categoryFilter !== "all" ||
+                statusFilter !== "all"
+                  ? "No tasks match your current search or filter criteria. Try resetting filters."
+                  : "Your task list is empty. Add a task above to get started!"}
               </p>
-              {(searchQuery || priorityFilter !== 'all' || categoryFilter !== 'all' || statusFilter !== 'all') && (
+              {(searchQuery ||
+                priorityFilter !== "all" ||
+                categoryFilter !== "all" ||
+                statusFilter !== "all") && (
                 <button
                   onClick={() => {
-                    setSearchQuery('');
-                    setStatusFilter('all');
-                    setPriorityFilter('all');
-                    setCategoryFilter('all');
+                    setSearchQuery("");
+                    setStatusFilter("all");
+                    setPriorityFilter("all");
+                    setCategoryFilter("all");
                   }}
                   className="mt-3 text-xs font-semibold text-indigo-600 hover:underline"
                 >
@@ -629,15 +769,17 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
           ) : (
             filteredTodos.map((todo) => {
               const overdue = !todo.completed && isOverdue(todo.dueDate);
-              const priorityObj = PRIORITIES.find((p) => p.value === todo.priority) || PRIORITIES[2];
+              const priorityObj =
+                PRIORITIES.find((p) => p.value === todo.priority) ||
+                PRIORITIES[2];
 
               return (
                 <div
                   key={todo.id}
                   className={`group bg-white rounded-xl border transition-all p-3.5 sm:p-4 flex items-start gap-3.5 ${
                     todo.completed
-                      ? 'border-slate-200 bg-slate-50/50 opacity-75'
-                      : 'border-slate-200 hover:border-indigo-300 hover:shadow-xs'
+                      ? "border-slate-200 bg-slate-50/50 opacity-75"
+                      : "border-slate-200 hover:border-indigo-300 hover:shadow-xs"
                   }`}
                 >
                   {/* Checkbox */}
@@ -645,7 +787,9 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                     type="button"
                     onClick={() => handleToggle(todo.id)}
                     className="mt-0.5 text-slate-400 hover:text-indigo-600 focus:outline-hidden transition-colors shrink-0"
-                    title={todo.completed ? 'Mark incomplete' : 'Mark completed'}
+                    title={
+                      todo.completed ? "Mark incomplete" : "Mark completed"
+                    }
                   >
                     {todo.completed ? (
                       <CheckCircle2 className="w-5 h-5 text-emerald-600 fill-emerald-50" />
@@ -660,8 +804,8 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                       <span
                         className={`text-sm font-semibold transition-all break-words ${
                           todo.completed
-                            ? 'line-through text-slate-400'
-                            : 'text-slate-900'
+                            ? "line-through text-slate-400"
+                            : "text-slate-900"
                         }`}
                       >
                         {todo.title}
@@ -671,7 +815,9 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                     {todo.description && (
                       <p
                         className={`text-xs mt-1 leading-relaxed line-clamp-2 ${
-                          todo.completed ? 'line-through text-slate-400' : 'text-slate-600'
+                          todo.completed
+                            ? "line-through text-slate-400"
+                            : "text-slate-600"
                         }`}
                       >
                         {todo.description}
@@ -684,7 +830,9 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                       <span className={`font-semibold ${priorityObj.color}`}>
                         {priorityObj.label}
                       </span>
-                      <span aria-hidden="true" className="text-slate-300">·</span>
+                      <span aria-hidden="true" className="text-slate-300">
+                        ·
+                      </span>
 
                       {/* Category */}
                       <span>{todo.category}</span>
@@ -692,13 +840,23 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                       {/* Due date */}
                       {todo.dueDate && (
                         <>
-                          <span aria-hidden="true" className="text-slate-300">·</span>
-                          <span className={`inline-flex items-center gap-1 font-mono tabular-nums ${
-                            overdue ? 'text-rose-600 font-semibold' : 'text-slate-500'
-                          }`}>
+                          <span aria-hidden="true" className="text-slate-300">
+                            ·
+                          </span>
+                          <span
+                            className={`inline-flex items-center gap-1 font-mono tabular-nums ${
+                              overdue
+                                ? "text-rose-600 font-semibold"
+                                : "text-slate-500"
+                            }`}
+                          >
                             <Calendar className="w-3 h-3" />
                             <span>{todo.dueDate}</span>
-                            {overdue && <span className="text-[10px] font-bold uppercase">(Overdue)</span>}
+                            {overdue && (
+                              <span className="text-[10px] font-bold uppercase">
+                                (Overdue)
+                              </span>
+                            )}
                           </span>
                         </>
                       )}
@@ -758,7 +916,9 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                   type="text"
                   required
                   value={editingTodo.title}
-                  onChange={(e) => setEditingTodo({ ...editingTodo, title: e.target.value })}
+                  onChange={(e) =>
+                    setEditingTodo({ ...editingTodo, title: e.target.value })
+                  }
                   className="w-full px-3 py-2 text-sm bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:border-indigo-600"
                 />
               </div>
@@ -770,8 +930,13 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                 </label>
                 <textarea
                   rows={3}
-                  value={editingTodo.description || ''}
-                  onChange={(e) => setEditingTodo({ ...editingTodo, description: e.target.value })}
+                  value={editingTodo.description || ""}
+                  onChange={(e) =>
+                    setEditingTodo({
+                      ...editingTodo,
+                      description: e.target.value,
+                    })
+                  }
                   className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:border-indigo-600"
                 />
               </div>
@@ -784,7 +949,12 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                   </label>
                   <select
                     value={editingTodo.priority}
-                    onChange={(e) => setEditingTodo({ ...editingTodo, priority: e.target.value as TodoPriority })}
+                    onChange={(e) =>
+                      setEditingTodo({
+                        ...editingTodo,
+                        priority: e.target.value as TodoPriority,
+                      })
+                    }
                     className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:border-indigo-600"
                   >
                     <option value="urgent">🔴 Urgent</option>
@@ -800,7 +970,12 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                   </label>
                   <select
                     value={editingTodo.category}
-                    onChange={(e) => setEditingTodo({ ...editingTodo, category: e.target.value as TodoCategory })}
+                    onChange={(e) =>
+                      setEditingTodo({
+                        ...editingTodo,
+                        category: e.target.value as TodoCategory,
+                      })
+                    }
                     className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:border-indigo-600"
                   >
                     {CATEGORIES.map((cat) => (
@@ -820,8 +995,13 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                   </label>
                   <input
                     type="date"
-                    value={editingTodo.dueDate || ''}
-                    onChange={(e) => setEditingTodo({ ...editingTodo, dueDate: e.target.value })}
+                    value={editingTodo.dueDate || ""}
+                    onChange={(e) =>
+                      setEditingTodo({
+                        ...editingTodo,
+                        dueDate: e.target.value,
+                      })
+                    }
                     className="w-full px-3 py-2 text-xs bg-white border border-slate-200 rounded-xl focus:outline-hidden focus:border-indigo-600"
                   />
                 </div>
@@ -831,10 +1011,17 @@ export const TodoView: React.FC<TodoViewProps> = ({ currentUser, onLogout }) => 
                     <input
                       type="checkbox"
                       checked={editingTodo.completed}
-                      onChange={(e) => setEditingTodo({ ...editingTodo, completed: e.target.checked })}
+                      onChange={(e) =>
+                        setEditingTodo({
+                          ...editingTodo,
+                          completed: e.target.checked,
+                        })
+                      }
                       className="w-4 h-4 rounded text-indigo-600 border-slate-300"
                     />
-                    <span className="text-xs font-semibold text-slate-700">Completed</span>
+                    <span className="text-xs font-semibold text-slate-700">
+                      Completed
+                    </span>
                   </label>
                 </div>
               </div>
