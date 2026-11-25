@@ -43,38 +43,38 @@ export const Navbar: React.FC<NavbarProps> = ({
           <nav className="hidden md:flex items-center gap-1.5 p-1 bg-slate-100 rounded-lg text-xs font-medium">
             <Link
               to="/"
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap `}
+              className={`px-3.5 py-1.5 text-xs font-semibold text-black hover:text-white hover:bg-indigo-600  rounded-lg shadow-xs transition-colors whitespace-nowrap `}
             >
               1. Register
             </Link>
             <Link
              to='/email-verify'
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap `}
+              className={`px-3.5 py-1.5 text-xs font-semibold text-black hover:text-white hover:bg-indigo-600  rounded-lg shadow-xs transition-colors whitespace-nowrap`}
             >
               2. Gmail Verify
             </Link>
             <Link
               to='/login'
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap `}
+              className={`px-3.5 py-1.5 text-xs font-semibold text-black hover:text-white hover:bg-indigo-600  rounded-lg shadow-xs transition-colors whitespace-nowrap`}
             >
               3. Login
             </Link>
             <Link
               to='/forgot-password'
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap `}
+              className={`px-3.5 py-1.5 text-xs font-semibold text-black hover:text-white hover:bg-indigo-600  rounded-lg shadow-xs transition-colors whitespace-nowrap`}
             >
               4. Forgot
             </Link>
             <Link
               to='/reset-password'
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap `}
+              className={`px-3.5 py-1.5 text-xs font-semibold text-black hover:text-white hover:bg-indigo-600  rounded-lg shadow-xs transition-colors whitespace-nowrap`}
              
             >
               5. Reset
             </Link>
             <Link
               to='/todo-view'
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap `}
+              className={`px-3.5 py-1.5 text-xs font-semibold text-black hover:text-white hover:bg-indigo-600  rounded-lg shadow-xs transition-colors whitespace-nowrap`}
             >
               6. Todo Manager
             </Link>
@@ -115,18 +115,18 @@ export const Navbar: React.FC<NavbarProps> = ({
               </div>
             ) : (
               <div className="flex items-center gap-2">
-                <button
-                  onClick={() => onNavigate('login')}
+                <Link
+                  to='/login'
                   className="px-3.5 py-1.5 text-xs font-medium text-slate-700 hover:text-slate-900 bg-slate-100 hover:bg-slate-200 rounded-lg transition-colors whitespace-nowrap"
                 >
                   Sign In
-                </button>
-                <button
-                  onClick={() => onNavigate('register')}
+                </Link>
+                <Link
+                  to='/'
                   className="px-3.5 py-1.5 text-xs font-semibold text-white bg-indigo-600 hover:bg-indigo-700 rounded-lg shadow-xs transition-colors whitespace-nowrap"
                 >
                   Create Account
-                </button>
+                </Link>
               </div>
             )}
           </div>
