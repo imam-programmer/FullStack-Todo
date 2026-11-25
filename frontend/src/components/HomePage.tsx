@@ -37,21 +37,13 @@ export default function HomePage() {
     setCurrentPage('verify-email');
   };
 
-  const handleVerified = (user: User) => {
-    setCurrentUser(user);
-    setCurrentPage('todos');
-  };
+
 
   const handleLoginSuccess = (user: User) => {
     setCurrentUser(user);
     setCurrentPage('todos');
   };
 
-  const handleLogout = () => {
-    authService.logout();
-    setCurrentUser(null);
-    setCurrentPage('login');
-  };
 
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col selection:bg-indigo-500 selection:text-white">
@@ -60,63 +52,16 @@ export default function HomePage() {
 
       {/* Main Content Area */}
       <main className="flex-1 flex flex-col justify-center items-center p-3 sm:p-6 lg:p-8">
-        {currentPage === 'register' && (
+    
           <RegisterView
             onNavigate={handleNavigate}
             onRegistered={handleRegistered}
             onGoogleSuccess={handleLoginSuccess}
           />
-        )}
-
-        {currentPage === 'verify-email' && (
-          <EmailVerifyView
-            email={pendingEmail}
-            onNavigate={handleNavigate}
-            onVerified={handleVerified}
-          />
-        )}
-
-        {currentPage === 'login' && (
-          <LoginView
-            onNavigate={handleNavigate}
-            onLoginSuccess={handleLoginSuccess}
-          />
-        )}
-
-        {currentPage === 'forgot-password' && (
-          <ForgotPasswordView
-            onNavigate={handleNavigate}
-            onCodeSent={(email) => {
-              setPendingEmail(email);
-              setCurrentPage('reset-password');
-            }}
-          />
-        )}
-
-        {currentPage === 'reset-password' && (
-          <ResetPasswordView
-            email={pendingEmail}
-            onNavigate={handleNavigate}
-          />
-        )}
-
-        {currentPage === 'todos' && (
-          <TodoView
-            currentUser={currentUser}
-            onLogout={handleLogout}
-          />
-        )}
       </main>
 
       {/* Clean Footer */}
-      <footer className="py-4 border-t border-slate-200 text-center text-xs text-slate-500 bg-white">
-        <div className="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
-          <p>© {new Date().getFullYear()} TaskFlow · Built with React & Tailwind CSS</p>
-          <div className="flex items-center gap-3">
-            <span className="text-slate-400">Ready for Express / REST API integration</span>
-          </div>
-        </div>
-      </footer>
+    
     </div>
   );
 }

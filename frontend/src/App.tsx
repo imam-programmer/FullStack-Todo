@@ -15,12 +15,12 @@ const router = createBrowserRouter([
     children: [
       { index: true, Component: HomePage },
       { path: "email-verify", Component: EmailVerifyView },
-      { path: "forgot-password", Component: ForgotPasswordView },
-       { path: "login", Component: LoginView },
-       { path: "reset-password", Component: ResetPasswordView },
-       { path: "todo-view", Component: TodoView },
+      { path: "todo-view", Component: TodoView },
     ],
   },
+  { path: "login", Component: LoginView },
+  { path: "forgot-password", Component: ForgotPasswordView },
+  { path: "reset-password", Component: ResetPasswordView },
 ]);
 
 const App = () => {

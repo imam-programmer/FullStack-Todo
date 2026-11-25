@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AuthPage } from '../types';
 import { authService } from '../services/authService';
 import { KeyRound, Mail, ArrowRight, ArrowLeft, CheckCircle2, AlertCircle } from 'lucide-react';
+import { Link } from 'react-router';
 
 interface ForgotPasswordViewProps {
   onNavigate: (page: AuthPage) => void;
@@ -127,13 +128,14 @@ export const ForgotPasswordView: React.FC<ForgotPasswordViewProps> = ({
 
         {/* Footer */}
         <div className="mt-6 pt-5 border-t border-slate-100 text-center">
-          <button
-            onClick={() => onNavigate('login')}
+          <Link
+            to='/login'
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Back to Login</span>
-          </button>
+          </Link>
+          
         </div>
       </div>
     </div>

@@ -3,6 +3,7 @@ import { AuthPage, User } from '../types';
 import { authService } from '../services/authService';
 import { LogIn, Mail, Lock, Eye, EyeOff, ArrowRight, Zap, CheckCircle2 } from 'lucide-react';
 import { GoogleLogo, GoogleAccountModal } from './GoogleAccountModal';
+import { Link } from 'react-router';
 
 interface LoginViewProps {
   onNavigate: (page: AuthPage) => void;
@@ -164,13 +165,12 @@ export const LoginView: React.FC<LoginViewProps> = ({
               <label className="block text-xs font-semibold text-slate-700">
                 Password
               </label>
-              <button
-                type="button"
-                onClick={() => onNavigate('forgot-password')}
+              <Link
+                to="/forgot-password"
                 className="text-xs font-medium text-indigo-600 hover:text-indigo-700 hover:underline"
               >
                 Forgot password?
-              </button>
+              </Link>
             </div>
             <div className="relative">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
@@ -228,12 +228,12 @@ export const LoginView: React.FC<LoginViewProps> = ({
         <div className="mt-6 pt-5 border-t border-slate-100 text-center">
           <p className="text-xs text-slate-500">
             Don't have an account?{' '}
-            <button
-              onClick={() => onNavigate('register')}
+            <Link
+              to='/'
               className="font-semibold text-indigo-600 hover:text-indigo-700 hover:underline"
             >
               Sign Up
-            </button>
+            </Link>
           </p>
         </div>
       </div>

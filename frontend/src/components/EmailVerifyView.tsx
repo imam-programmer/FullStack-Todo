@@ -2,6 +2,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import { AuthPage, User } from '../types';
 import { authService } from '../services/authService';
 import { Mail, CheckCircle2, RefreshCw, ArrowLeft, ShieldCheck, Sparkles, AlertCircle } from 'lucide-react';
+import { Link } from 'react-router';
 
 interface EmailVerifyViewProps {
   email: string;
@@ -283,12 +284,12 @@ export  const EmailVerifyView: React.FC<EmailVerifyViewProps> = ({
             <span>Change Email</span>
           </button>
 
-          <button
-            onClick={() => onNavigate('login')}
+          <Link
+            to="/login"
             className="font-medium text-indigo-600 hover:text-indigo-700 hover:underline"
           >
             Back to Login
-          </button>
+          </Link>
         </div>
       </div>
     </div>

@@ -45,38 +45,38 @@ export const Navbar: React.FC<NavbarProps> = ({
               to="/"
               className={`px-3.5 py-1.5 text-xs font-semibold text-black hover:text-white hover:bg-indigo-600  rounded-lg shadow-xs transition-colors whitespace-nowrap `}
             >
-              1. Register
+               Register
             </Link>
             <Link
              to='/email-verify'
               className={`px-3.5 py-1.5 text-xs font-semibold text-black hover:text-white hover:bg-indigo-600  rounded-lg shadow-xs transition-colors whitespace-nowrap`}
             >
-              2. Gmail Verify
+               Gmail Verify
             </Link>
             <Link
               to='/login'
               className={`px-3.5 py-1.5 text-xs font-semibold text-black hover:text-white hover:bg-indigo-600  rounded-lg shadow-xs transition-colors whitespace-nowrap`}
             >
-              3. Login
+               Login
             </Link>
             <Link
               to='/forgot-password'
               className={`px-3.5 py-1.5 text-xs font-semibold text-black hover:text-white hover:bg-indigo-600  rounded-lg shadow-xs transition-colors whitespace-nowrap`}
             >
-              4. Forgot
+               Forgot
             </Link>
             <Link
               to='/reset-password'
               className={`px-3.5 py-1.5 text-xs font-semibold text-black hover:text-white hover:bg-indigo-600  rounded-lg shadow-xs transition-colors whitespace-nowrap`}
              
             >
-              5. Reset
+               Reset
             </Link>
             <Link
               to='/todo-view'
               className={`px-3.5 py-1.5 text-xs font-semibold text-black hover:text-white hover:bg-indigo-600  rounded-lg shadow-xs transition-colors whitespace-nowrap`}
             >
-              6. Todo Manager
+               Todo Manager
             </Link>
           </nav>
 

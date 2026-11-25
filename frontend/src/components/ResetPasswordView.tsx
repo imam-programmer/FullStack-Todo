@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { AuthPage } from '../types';
 import { authService } from '../services/authService';
 import { ShieldAlert, Lock, Eye, EyeOff, CheckCircle2, ArrowRight, ArrowLeft } from 'lucide-react';
+import { Link } from 'react-router';
 
 interface ResetPasswordViewProps {
   email: string;
@@ -229,13 +230,13 @@ export const ResetPasswordView: React.FC<ResetPasswordViewProps> = ({
 
         {/* Footer */}
         <div className="mt-6 pt-5 border-t border-slate-100 text-center">
-          <button
-            onClick={() => onNavigate('login')}
+          <Link
+            to="/login"
             className="inline-flex items-center gap-1.5 text-xs font-semibold text-slate-600 hover:text-slate-900 transition-colors"
           >
             <ArrowLeft className="w-3.5 h-3.5" />
             <span>Cancel & Back to Login</span>
-          </button>
+          </Link>
         </div>
       </div>
     </div>
