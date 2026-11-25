@@ -22,7 +22,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-16 gap-4">
           {/* Zone 1: Single text element wordmark */}
           <div className="flex items-center gap-2">
-            <Link href="/" 
+            <Link to="/" 
               className="flex items-center gap-2.5 text-left group focus:outline-hidden"
             >
               <div className="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-xs group-hover:bg-indigo-700 transition-colors">
@@ -41,66 +41,43 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           {/* Zone 2: Navigation & Dev Page Switcher (Single-line, whitespace-nowrap) */}
           <nav className="hidden md:flex items-center gap-1.5 p-1 bg-slate-100 rounded-lg text-xs font-medium">
-            <button
-              onClick={() => onNavigate('register')}
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap ${
-                currentPage === 'register'
-                  ? 'bg-white text-indigo-700 shadow-xs font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
+            <Link
+              to="/"
+              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap `}
             >
               1. Register
-            </button>
-            <button
-              onClick={() => onNavigate('verify-email')}
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap ${
-                currentPage === 'verify-email'
-                  ? 'bg-white text-indigo-700 shadow-xs font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
+            </Link>
+            <Link
+             to='/email-verify'
+              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap `}
             >
               2. Gmail Verify
-            </button>
-            <button
-              onClick={() => onNavigate('login')}
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap ${
-                currentPage === 'login'
-                  ? 'bg-white text-indigo-700 shadow-xs font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
+            </Link>
+            <Link
+              to='/login'
+              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap `}
             >
               3. Login
-            </button>
-            <button
-              onClick={() => onNavigate('forgot-password')}
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap ${
-                currentPage === 'forgot-password'
-                  ? 'bg-white text-indigo-700 shadow-xs font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
+            </Link>
+            <Link
+              to='/forgot-password'
+              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap `}
             >
               4. Forgot
-            </button>
-            <button
-              onClick={() => onNavigate('reset-password')}
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap ${
-                currentPage === 'reset-password'
-                  ? 'bg-white text-indigo-700 shadow-xs font-semibold'
-                  : 'text-slate-600 hover:text-slate-900'
-              }`}
+            </Link>
+            <Link
+              to='/reset-password'
+              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap `}
+             
             >
               5. Reset
-            </button>
-            <button
-              onClick={() => onNavigate('todos')}
-              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap ${
-                currentPage === 'todos'
-                  ? 'bg-indigo-600 text-white shadow-xs font-semibold'
-                  : 'text-slate-700 hover:text-slate-900 font-semibold'
-              }`}
+            </Link>
+            <Link
+              to='/todo-view'
+              className={`px-3 py-1.5 rounded-md transition-colors whitespace-nowrap `}
             >
               6. Todo Manager
-            </button>
+            </Link>
           </nav>
 
           {/* Zone 3: User status & primary action */}
