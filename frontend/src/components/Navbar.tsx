@@ -1,6 +1,7 @@
 import React from 'react';
 import { AuthPage, User } from '../types';
 import { CheckSquare, LogOut, User as UserIcon, Code2 } from 'lucide-react';
+import { Link } from 'react-router';
 
 interface NavbarProps {
   currentPage: AuthPage;
@@ -21,8 +22,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         <div className="flex items-center justify-between h-16 gap-4">
           {/* Zone 1: Single text element wordmark */}
           <div className="flex items-center gap-2">
-            <button
-              onClick={() => onNavigate(currentUser ? 'todos' : 'login')}
+            <Link href="/" 
               className="flex items-center gap-2.5 text-left group focus:outline-hidden"
             >
               <div className="w-9 h-9 rounded-lg bg-indigo-600 text-white flex items-center justify-center shadow-xs group-hover:bg-indigo-700 transition-colors">
@@ -36,7 +36,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   Auth & Task System
                 </span>
               </div>
-            </button>
+            </Link>
           </div>
 
           {/* Zone 2: Navigation & Dev Page Switcher (Single-line, whitespace-nowrap) */}

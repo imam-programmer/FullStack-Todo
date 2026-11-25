@@ -9,7 +9,7 @@ interface EmailVerifyViewProps {
   onVerified: (user: User) => void;
 }
 
-export const EmailVerifyView: React.FC<EmailVerifyViewProps> = ({
+export  const EmailVerifyView: React.FC<EmailVerifyViewProps> = ({
   email,
   onNavigate,
   onVerified,
